@@ -12,7 +12,7 @@ import (
 var fullTestInput = `the quick brown [b]fox[/b]:
 [url=http://example][img]http://example.png[/img][/url]`
 
-var fullTestOutput = `the quick brown <b>fox</b>:<br><a href="http://example"><img src="http://example.png"></a>`
+var fullTestOutput = "the quick brown <b>fox</b>:\n<a href=\"http://example\"><img src=\"http://example.png\"></a>"
 
 func TestFullBasic(t *testing.T) {
 	c := NewCompiler(false, false)
@@ -58,10 +58,10 @@ var basicTests = map[string]string{
 	`[u][b]something[/b] then [b]something else[/b][/u]`: `<u><b>something</b> then <b>something else</b></u>`,
 	`blank[b][/b]`:                                       `blank<b></b>`,
 
-	"test\nnewline\nnewline": `test<br>newline<br>newline`,
-	"test\n\nnewline":        `test<br><br>newline`,
-	"[b]test[/b]\n\nnewline": `<b>test</b><br><br>newline`,
-	"[b]test\nnewline[/b]":   `<b>test<br>newline</b>`,
+	"test\nnewline\nnewline": "test\nnewline\nnewline",
+	"test\n\nnewline":        "test\n\nnewline",
+	"[b]test[/b]\n\nnewline": "<b>test</b>\n\nnewline",
+	"[b]test\nnewline[/b]":   "<b>test\nnewline</b>",
 
 	"[code][b]some[/b]\n[i]stuff[/i]\n[/quote][/code][b]more[/b]":         "<pre>[b]some[/b]\n[i]stuff[/i]\n[/quote]</pre><b>more</b>",
 	"[quote name=Someguy]hello[/quote]":                                   `<blockquote><cite>Someguy said:</cite>hello</blockquote>`,
@@ -177,10 +177,10 @@ func BenchmarkFullSanitization(b *testing.B) {
 
 var brokenTests = map[string]string{
 	"[b]":        `[b]`,
-	"[b]\n":      `[b]<br>`,
+	"[b]\n":      "[b]\n",
 	"[b]hello":   `[b]hello`,
-	"[b]hello\n": `[b]hello<br>`,
-	"the quick brown [b][i]fox[/b][/i]\n[i]\n[b]hi[/b]][b][url=http://example[img]http://example.png[/img][/url][b]": `the quick brown <b>[i]fox</b>[/i]<br>[i]<br><b>hi</b>][b][url=http://example<img src="http://example.png">[/url][b]`,
+	"[b]hello\n": "[b]hello\n",
+	"the quick brown [b][i]fox[/b][/i]\n[i]\n[b]hi[/b]][b][url=http://example[img]http://example.png[/img][/url][b]": "the quick brown <b>[i]fox</b>[/i]\n[i]\n<b>hi</b>][b][url=http://example<img src=\"http://example.png\">[/url][b]",
 	"the quick brown[/b][b]hello[/b]":                                                                                `the quick brown[/b]<b>hello</b>`,
 	"the quick brown[/b][/code]":                                                                                     `the quick brown[/b][/code]`,
 	"[ b][	i]the quick brown[/i][/b=hello]": `[ b]<i>the quick brown</i>[/b=hello]`,

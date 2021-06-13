@@ -62,21 +62,18 @@ func (c Compiler) CompileTree(node *BBCodeNode) *HTMLTag {
 	var out = NewHTMLTag("")
 	if node.ID == TEXT {
 		out.Value = node.Value.(string)
-		InsertNewlines(out)
 		for _, child := range node.Children {
 			out.AppendChild(c.CompileTree(child))
 		}
 	} else if node.ID == CLOSING_TAG {
 		if !c.IgnoreUnmatchedClosingTags {
 			out.Value = node.Value.(BBClosingTag).Raw
-			InsertNewlines(out)
 		}
 		for _, child := range node.Children {
 			out.AppendChild(c.CompileTree(child))
 		}
 	} else if node.ClosingTag == nil && !c.AutoCloseTags {
 		out.Value = node.Value.(BBOpeningTag).Raw
-		InsertNewlines(out)
 		for _, child := range node.Children {
 			out.AppendChild(c.CompileTree(child))
 		}
@@ -139,7 +136,6 @@ var DefaultTagCompiler TagCompilerFunc
 func init() {
 	DefaultTagCompiler = func(node *BBCodeNode) (*HTMLTag, bool) {
 		out := NewHTMLTag(node.GetOpeningTag().Raw)
-		InsertNewlines(out)
 		if len(node.Children) == 0 {
 			out.AppendChild(NewHTMLTag(""))
 		} else {
@@ -149,7 +145,6 @@ func init() {
 		}
 		if node.ClosingTag != nil {
 			tag := NewHTMLTag(node.ClosingTag.Raw)
-			InsertNewlines(tag)
 			out.AppendChild(tag)
 		}
 		return out, false
