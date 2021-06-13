@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/frustra/bbcode"
+	"github.com/Snawoot/bbcode"
 )
 
 func main() {
